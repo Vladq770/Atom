@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  db:
+    restart: always
+    image: postgres:15
+    container_name: db_app
+    command: -p ${DB_PORT}
+    expose:
+      - ${DB_PORT}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    env_file:
+      - .env

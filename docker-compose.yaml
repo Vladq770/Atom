@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  db:
+    restart: always
+    image: postgres:15
+    container_name: db_app
+    command: -p ${DB_PORT}
+    expose:
+      - ${DB_PORT}
+    env_file:
+      - .env
+
+  app:
+    restart: always
+    build: ./fast_app
+    env_file:
+      - .env
+    container_name: fastapi_app
+    command: bash -c 'while !</dev/tcp/db/${DB_PORT}; do sleep 1; done; /fastapi_app/app.sh'
+    ports:
+      - 9999:8000
+    depends_on:
+      db:
+        condition: service_started
+
